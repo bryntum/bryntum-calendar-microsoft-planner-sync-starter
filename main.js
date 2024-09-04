@@ -2,11 +2,10 @@ import { Calendar } from '@bryntum/calendar';
 import '@bryntum/calendar/calendar.stockholm.css';
 
 const calendar = new Calendar({
-    appendTo : 'calendar',
-    mode     : 'week',
-    timeZone : 'UTC',
-    date     : new Date(2024, 8, 23),
-
+    appendTo  : 'calendar',
+    mode      : 'month',
+    timeZone  : 'UTC',
+    date      : new Date(2024, 8, 1),
     resources : [
         {
             id         : 1,
