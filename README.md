@@ -23,4 +23,4 @@ npm run dev
 
 You'll see a Bryntum Calendar with a single event:
 
-![Initial Bryntum Calendar with a single event](images/bryntum-calendar-initial.png)
+![Initial Bryntum Calendar with a single event](images/bryntum-calendar.png)
