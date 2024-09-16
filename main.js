@@ -58,7 +58,7 @@ const calendar = new Calendar({
     },
     modes : {
         month : {
-            // Render an icon showing number of invitees (editable in the event editor)
+            // Render an icon showing progress state (editable in the event editor)
             eventRenderer : ({ eventRecord, renderData }) => {
                 if (eventRecord.percentComplete === 0) {
                     renderData.eventColor = '#605e5c';
