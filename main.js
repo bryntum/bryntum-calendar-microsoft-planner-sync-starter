@@ -1,10 +1,11 @@
 import { Calendar, StringHelper } from '@bryntum/calendar';
 import '@bryntum/calendar/calendar.stockholm.css';
-import { signIn } from './auth.js';
+import { signIn, signOut } from './auth.js';
 import { createTask, deleteTask, getTasks, updateTask } from './graph.js';
 import CustomEventModel from './lib/CustomEventModel.js';
 
 const signInLink = document.getElementById('signin');
+const loaderContainer = document.querySelector('.loader-container');
 
 const calendar = new Calendar({
     appendTo   : 'calendar',
@@ -58,7 +59,7 @@ const calendar = new Calendar({
     },
     modes : {
         month : {
-            // Render an icon showing progress state (editable in the event editor)
+            // Render an icon showing number of invitees (editable in the event editor)
             eventRenderer : ({ eventRecord, renderData }) => {
                 if (eventRecord.percentComplete === 0) {
                     renderData.eventColor = '#605e5c';
@@ -77,6 +78,20 @@ const calendar = new Calendar({
             }
         }
     },
+    tbar : {
+        items : {
+            deleteButton : {
+                text : 'Signout',
+                icon : 'b-fa b-fa-sign-out',
+                onClick() {
+                    signOut().then(() => {
+                        // Refresh the page after sign out
+                        location.reload();
+                    });
+                }
+            }
+        }
+    },
     listeners : {
         dataChange : function(event) {
             if (event.store.id === 'events') {
@@ -87,10 +102,12 @@ const calendar = new Calendar({
 });
 
 async function displayUI() {
-    await signIn();
+    const account = localStorage.getItem('msalAccount');
 
-    // Hide sign in link and initial UI
-    signInLink.style = 'display: none';
+    if (!account) {
+        await signIn();
+    }
+
     const content = document.getElementById('content');
     content.style = 'display: block';
 
@@ -124,6 +141,17 @@ async function displayUI() {
     });
     calendar.events = calendarEvents;
 }
+
+if (localStorage.getItem('msalAccount')) {
+    displayUI();
+    signInLink.style = 'display: none';
+}
+else {
+    signInLink.style = 'display: block';
+}
+
+loaderContainer.style = 'display: none';
+
 
 signInLink.addEventListener('click', displayUI);
 

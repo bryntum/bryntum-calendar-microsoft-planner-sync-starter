@@ -31,14 +31,14 @@ export function ensureScope(scope) {
 // Log the user in
 export async function signIn() {
     const authResult = await msalInstance.loginPopup(msalRequest);
-    sessionStorage.setItem('msalAccount', authResult.account.username);
+    localStorage.setItem('msalAccount', authResult.account.username);
 }
 
 export async function getToken() {
-    const account = sessionStorage.getItem('msalAccount');
+    const account = localStorage.getItem('msalAccount');
     if (!account) {
         throw new Error(
-            'User info cleared from session. Please sign out and sign in again.'
+            'User info cleared from local storage. Please sign out and sign in again.'
         );
     }
     try {
@@ -63,5 +63,16 @@ export async function getToken() {
         else {
             throw silentError;
         }
+    }
+}
+
+export async function signOut() {
+    const account = localStorage.getItem('msalAccount');
+    if (account) {
+        const logoutRequest = {
+            account : msalInstance.getAccountByUsername(account)
+        };
+        await msalInstance.logoutPopup(logoutRequest);
+        localStorage.removeItem('msalAccount');
     }
 }
